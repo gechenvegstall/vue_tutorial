@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="" method="post">
+        <p>用户名：<input type="text" name="" id="text1"></p>
+        <p>密&nbsp;&nbsp;码：<input type="text" name="" id="pwd"></p>
+        <input type="submit" value="提交" id="sub1">
+    </form>
+   <script>
+        var name = document.getElementById("text1").value;
+        var name = document.getElementById("pwd").value;
+        document.getElementById("sub1").onclick=function(){
+            if(name == "ab" && pwd == "123"){
+                alert("登录成功")
+            }else{
+                alert("登陆失败")
+            }
+        }
+   </script>
+</body>
+</html>
