@@ -25,24 +25,38 @@ const NewStu=async ()=>{
     try{
         await axios.post('http://127.0.0.1:8000/post_stu',null,{params:newstuden.value})
         await GetStu()   //添加完新数据，重新更新一遍页面
-        // clearFrom(newstuden.value)
-        
+        newstuden.value={id:'',name:'',clas:'',time:'',cre:''}
+        alert("添加成功")
     }catch(error){
         console.log("创建失败",error)
     }
 }
 // 删除
-const delstu=ref({id:''})
 const DelStu=async ()=>{
     try{
-        await axios.delete('http://127.0.0.1:8000/delete_stu',null,{params:delstu.value})
+        const id=newstuden.value.id
+        await axios.delete('http://127.0.0.1:8000/delete_stu',{params:{id}})
         await GetStu()
-
+        alert("删除成功")
+        newstuden.value={id:'',name:'',clas:'',time:'',cre:''}
     }catch(error){
         console.log("删除失败",error)
+}
+}
+// 更新
+const updata=ref({list:'',data:'',id:''})
+const UpData=async()=>{
+    try{
+        const list=updata.value.list
+        const data=updata.value.data
+        const id=updata.value.id
+        await axios.put('http://127.0.0.1:8000/put_stu',null,{params:{list,data,id}})
+        await GetStu()
+        newstuden.value={id:'',name:'',clas:'',time:'',cre:''}
+    }catch(error){
+        console.log("更新失败",error)
     }
 }
-
 </script>
 
 <template>
@@ -71,6 +85,7 @@ const DelStu=async ()=>{
 
   <!-- 添加 -->
  <div>
+    <h2>添加/删除</h2>
     <form @submit.prevent="NewStu">
         <input v-model="newstuden.id" placeholder="学号">
         <input v-model="newstuden.name" placeholder="姓名">
@@ -79,13 +94,16 @@ const DelStu=async ()=>{
         <input v-model="newstuden.cre" placeholder="创建人">
         <button id="new_stu">添加</button>
     </form>
+    <!-- 删除 -->
+    <button @click="DelStu(newstuden.id)" id="del_stu">删除</button>
  </div>
- <br>
- <!-- 删除 -->
  <div>
-    <form @submit.prevent="DelStu">
-        <input v-model="delstu.id" placeholder="删除学号">
-        <button id="del_stu">删除</button>
+    <h2>更新</h2>
+    <form @submit.prevent="UpData">
+        <input v-model="updata.list" placeholder="更新字段">
+        <input v-model="updata.data" placeholder="更新内容">
+        <input v-model="updata.id" placeholder="条件">
+        <button>更新</button>
     </form>
  </div>
 </template>
