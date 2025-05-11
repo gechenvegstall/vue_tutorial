@@ -48,7 +48,7 @@ async def delete_stu(id:str):
     try:
         with con.cursor() as cursor:
             sql="DELETE FROM students WHERE STUDENT_ID = %s"
-            cursor.execute(sql,(id))
+            cursor.execute(sql,(id,))
             con.commit()
     finally:
         con.close()
