@@ -1,11 +1,11 @@
 import { createRouter,createWebHashHistory } from "vue-router";
 
-import Home from "@/pages/Home.vue";
-import Post from "@/pages/Post.vue";
-import Put from "@/pages/Put.vue";
-import Del from "@/pages/Del.vue";
-import watchstu from "@/pages/watchstu.vue";
-import About from "@/pages/About.vue";
+import Home from "../pages/Home.vue";
+import Post from "../pages/Poststu.vue";
+import Put from "../pages/Putstu.vue";
+import Del from "../pages/Delstu.vue";
+import Watchstu from "../pages/Watchstu.vue";
+import About from "../pages/About.vue";
 
 
 const routes = createRouter({
@@ -24,7 +24,24 @@ const routes = createRouter({
         name:"putstu",
         path:"/putstu",
         component:Put
+    },
+    {
+        name:"delstu",
+        path:"/delstu",
+        component:Del
+    },
+    {
+        name:"watchstu",
+        path:"/watchstu",
+        component:Watchstu
+    },
+    {
+        name:"about",
+        path:"/about",
+        component:About
     }
 
 
 ]})
+
+export default routes

@@ -1,4 +1,4 @@
-<!-- <script setup>
+<script setup>
 import { ref,onMounted } from 'vue';
 import axios from 'axios';
 onMounted(async ()=>{
@@ -27,4 +27,4 @@ const getStu = async () => {
     </div>
 </template>
 
-<style></style> -->
+<style></style>
