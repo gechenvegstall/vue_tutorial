@@ -8,7 +8,6 @@ const UpData=async()=>{
         const data=updata.value.data
         const id=updata.value.id
         await axios.put('http://127.0.0.1:8000/put_stu',null,{params:{list,data,id}})
-        await GetStu()
         newstuden.value={id:'',name:'',clas:'',time:'',cre:''}
     }catch(error){
         console.log("更新失败",error)
@@ -17,13 +16,27 @@ const UpData=async()=>{
 </script>
 
 <template>
-     <form @submit.prevent="UpData">
+     <!-- <form @submit.prevent="UpData">
         <input v-model="updata.list" placeholder="字段">
         <input v-model="updata.data" placeholder="更新内容">
         <input v-model="updata.id" placeholder="学号">
         <button>更新</button>
-    </form>
-    <P></P>
+    </form> -->
+    <div class="putstu">
+        <el-form label-width="auto"  style="max-width: 400px">
+            <el-form-item label="字段">
+                <el-input v-model="updata.list"/>
+            </el-form-item>
+            <el-form-item label="更新内容">
+                <el-input v-model="updata.data"/>
+            </el-form-item>
+            <el-form-item label="学号">
+                <el-input v-model="updata.id"/>
+            </el-form-item>
+            <el-button type='warning' @click="UpData">更新</el-button>
+        </el-form>
+    </div>
 </template>
 
-<style></style>
+<style>
+</style>
