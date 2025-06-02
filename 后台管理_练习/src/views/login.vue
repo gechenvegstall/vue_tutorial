@@ -24,7 +24,7 @@ const login = ()=>{
         if (valid) {
             // 这里可以添加登录逻辑
             console.log("登录成功");
-            router.push("/home");
+            router.push("/home/stats");
         } else {
             console.log("登录失败");
         }
