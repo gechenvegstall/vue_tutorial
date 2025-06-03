@@ -1,20 +1,22 @@
 <script setup>
 import { ref,reactive} from "vue";
 import {useRouter} from "vue-router";
+import axios from "axios";
+import { ElMessage } from "element-plus";
 const router=useRouter()
 const form = reactive({
     username: "admin",
-    password: "123456"
+    password: "admin123"
 })
 // 定义表单规则
 const rules=ref({
     username:[
         { required: true, message: "请输入用户名", trigger: "blur" },
-        { min: 2, max: 6, message: "长度在 2 到 6 个字符", trigger: "blur" }
+        { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" }
     ],
     password:[
         { required: true, message: "请输入密码", trigger: "blur" },
-        { min: 3, max: 6, message: "长度在 3 到 6 个字符", trigger: "blur" }
+        { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" }
     ]
 })
 // 校验是否符合规则
@@ -22,9 +24,16 @@ const loginForm = ref(null);
 const login = ()=>{
     loginForm.value.validate((valid) => {
         if (valid) {
-            // 这里可以添加登录逻辑
-            console.log("登录成功");
-            router.push("/home/stats");
+            // 添加登录逻辑
+            axios.post("http://127.0.0.1:8080/login",form).then((response) => {
+                console.log(response.data);
+                // 登录成功跳转页面
+                router.push("/home/stats");
+            }).catch((error) => {
+                // 登录失败提示
+                console.error("登录失败:", error);
+                ElMessage.error("登录失败，请检查用户名或密码");
+            });
         } else {
             console.log("登录失败");
         }
