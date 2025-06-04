@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { useUserStore } from '../stores/user'
 
 const routes = [
   {
@@ -63,4 +64,18 @@ const router = createRouter({
   routes
 });
 
+// 全局前置守卫
+router.beforeEach((to, from, next) => {
+  const userStore = useUserStore();
+  if (to.path === '/') {
+    next();
+  } else {
+    if (userStore.user.username || userStore.user.password) {
+      // 如果用户已登录，允许访问其他路由
+      next();
+    } else {
+      next('/');
+    }
+  }
+});
 export default router;

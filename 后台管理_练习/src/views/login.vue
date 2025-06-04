@@ -3,6 +3,7 @@ import { ref,reactive} from "vue";
 import {useRouter} from "vue-router";
 import axios from "axios";
 import { ElMessage } from "element-plus";
+import {useUserStore} from '../stores/user';
 const router=useRouter()
 const form = reactive({
     username: "admin",
@@ -26,16 +27,22 @@ const login = ()=>{
         if (valid) {
             // 添加登录逻辑
             axios.post("http://127.0.0.1:8080/login",form).then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 // 登录成功跳转页面
+                // 将用户信息存储到 Pinia 的 userStore 中
+                const userStore = useUserStore();
+                userStore.setUser(response.data);
+                // 跳转到首页或其他页面
+                ElMessage.success("登录成功");
                 router.push("/home/stats");
+                // console.log("登录成功", userStore.getUser());
             }).catch((error) => {
                 // 登录失败提示
                 console.error("登录失败:", error);
                 ElMessage.error("登录失败，请检查用户名或密码");
             });
         } else {
-            console.log("登录失败");
+            // console.log("登录失败");
         }
     });
 }
