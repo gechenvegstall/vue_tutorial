@@ -14,20 +14,45 @@ app.add_middleware(
     allow_headers=["*"],
 )
 # basemodel定义数据结构
+# 登录信息数据结构
 class Login(BaseModel):
     username:str
     password:str
 
-@app.get("/hello")
-async def hello():
-    return {"hello,wold!"}
+class Post_user(BaseModel):
+    username:str
+    password:str
+    roles:int
+# 获取数据库用户表信息
+@app.get("/users")
+async def user():
+    conn=db_sql()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("select * from users;")
+            users=cursor.fetchall()
+            return users
+    finally:
+        conn.close()
+
+# 添加用户
+@app.post("/post_user")
+async def post_user(users:Post_user):
+    conn=db_sql()
+    try:
+        with conn.cursor() as cursor:
+            sql="insert into users (username,password,roles) values (%s,%s,%s)"
+            cursor.execute(sql,(users.username,users.password,users.roles))
+            conn.commit()
+    finally:
+        conn.close()
 
 @app.post("/login")
 async def login(user_data:Login):
     conn=db_sql()  #数据库连接
     try:
         with conn.cursor() as cursor:
-            cursor.execute("select * from users where username=%s",(user_data.username,))
+            cursor.execute("select * from users where username=%s;",(user_data.username,))
             user=cursor.fetchone()
             # print(user)
             # 验证信息

@@ -86,7 +86,6 @@ function submit() {
           @click="changType(scope.row)"
           >编辑</el-button
         >
-        <!-- 修改el-button的大小 -->
         <el-button
           type="danger"
           icon="delete"
@@ -97,6 +96,7 @@ function submit() {
       </template>
     </el-table-column>
   </el-table>
+
   <!-- 使用dialog对话框添加商品 -->
   <el-dialog
     v-model="dialogVisible"
