@@ -23,6 +23,10 @@ class Post_user(BaseModel):
     username:str
     password:str
     roles:int
+
+class delete_user(BaseModel):
+    id:int
+
 # 获取数据库用户表信息
 @app.get("/users")
 async def user():
@@ -47,6 +51,19 @@ async def post_user(users:Post_user):
     finally:
         conn.close()
 
+#删除用户
+@app.delete("delete_user")
+async def del_user(id:delete_user):
+    conn=db_sql()
+    try:
+        with conn.cursor() as cursor:
+            sql="delete from users where id='%s'"
+            cursor.execute(sql,(id.id,))
+            conn.commit()
+    finally:
+        conn.close()
+
+
 @app.post("/login")
 async def login(user_data:Login):
     conn=db_sql()  #数据库连接
@@ -61,6 +78,7 @@ async def login(user_data:Login):
             else:return user
     finally:
         conn.close()
+
 
 if __name__ == "__main__":
     uvicorn.run(

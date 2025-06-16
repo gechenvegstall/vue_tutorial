@@ -59,6 +59,17 @@ function deleteUser(row) {
 function subUser() {
     dialogVisible.value = false;
     if (dialogType.value == "add") {
+        axios.post("http://127.0.0.1:8080/post_user",form.value).then((res) => {
+            console.log("添加用户成功:", res.data);
+        }).catch((err) => {
+            ElMessageBox.confirm("添加用户失败，请联系后台管理人员", "警告", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "error",
+            }).then(() => {
+                console.error("添加用户失败:", err);
+            });
+        });
         userList.value.push(form.value);
     } else {
         userList.value.forEach((item, index) => {
