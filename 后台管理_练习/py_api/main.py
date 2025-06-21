@@ -27,6 +27,12 @@ class Post_user(BaseModel):
 class delete_user(BaseModel):
     id:int
 
+class put_user(BaseModel):
+    username:str
+    password:str
+    roles:int
+    id:int
+
 # 获取数据库用户表信息
 @app.get("/users")
 async def user():
@@ -52,18 +58,31 @@ async def post_user(users:Post_user):
         conn.close()
 
 #删除用户
-@app.delete("delete_user")
+@app.delete("/delete_user")
 async def del_user(id:delete_user):
     conn=db_sql()
     try:
         with conn.cursor() as cursor:
-            sql="delete from users where id='%s'"
+            sql="delete from users where id=%s"
             cursor.execute(sql,(id.id,))
             conn.commit()
     finally:
         conn.close()
 
+# 修改用户
+@app.put("/put_user")
+async def post_user(put_u:put_user):
+    conn=db_sql()
+    try:
+        with conn.cursor() as cursor:
+            sql="update users set username=%s,password=%s,roles=%s where id=%s"
+            cursor.execute(sql,(put_u.username,put_u.password,put_u.roles,put_u.id))
+            conn.commit()
+    finally:
+        conn.close()
 
+
+# 验证登录
 @app.post("/login")
 async def login(user_data:Login):
     conn=db_sql()  #数据库连接

@@ -1,24 +1,33 @@
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted} from 'vue';
 import { ElMessageBox } from 'element-plus';
 import axios from 'axios';
 // 对话框显示状态
 const dialogVisible = ref(false);
+onMounted(async () => {
+    // 获取用户列表
+    await getuser();
+});
+
 
 // 用户列表
 let userList = ref([]);
-axios.get("http://127.0.0.1:8080/users").then((res) => {
-    userList.value = res.data;
-    console.log(userList.value);
-}).catch((err) => {
-    ElMessageBox.confirm("获取用户列表失败，请练习后台管理人员", "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error",
-    }).then(() => {
+const getuser=async()=>{
+    try{
+            await axios.get("http://127.0.0.1:8080/users").then((res) => {
+            userList.value = res.data;
+            console.log("获取后端数据",userList.value);
+        })
+    } catch(err){
         console.error("获取用户列表失败:", err);
-    });
-});
+        ElMessageBox.confirm("获取用户列表失败，请联系后台管理人员", "警告", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "error",
+        });
+    }
+}
+
 
 let dialogType = ref("add");
 // 添加用户获取表单内容
@@ -29,9 +38,6 @@ function adduser() {
     dialogType.value = "add";
     form.value = {};
 }
-    
-
-
 // 操作
 function postuser(row) {
     dialogVisible.value = true;
@@ -39,28 +45,49 @@ function postuser(row) {
     // 将当前行的数据浅拷贝赋值给form
     form.value = { ...row };
 }
+
 // 删除用户
+// row 当前行数据
 function deleteUser(row) {
-    // 删除之前使用elementplus给个弹窗确认
-    ElMessageBox.confirm(`此操作将永久删除--${row.username}, 是否继续?`, "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "error",
-    }).then(() => {
-        // 删除当前行
-        userList.value.forEach((item, index) => {
-            if (item.username == row.username) {
-                userList.value.splice(index, 1);
-            }
+    // 先显示确认对话框
+    ElMessageBox.confirm(
+        `此操作将永久删除--${row.username}, 是否继续?`,
+        "警告",
+        {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "error",
+        }
+    )
+    .then(() => {
+        // 用户点击了"确定"，此时再发送删除请求
+        return axios.delete("http://127.0.0.1:8080/delete_user", { 
+            data: { id: row.id } 
         });
+    })
+    .then((res) => {
+        // 删除请求成功返回
+        console.log("删除用户成功:", res.data);
+        getuser(); // 刷新用户列表
+    })
+    .catch((err) => {
+        // 如果是用户取消了操作，err会包含特定信息
+        if (err && err.toString() === "cancel") {
+            console.log("取消删除用户");
+        } else {
+            // 处理删除请求失败的情况
+            console.error("删除用户失败:", err);
+        }
     });
 }
+
 // 提交，添加或者修改的用户
-function subUser() {
+function subUser(){
     dialogVisible.value = false;
-    if (dialogType.value == "add") {
-        axios.post("http://127.0.0.1:8080/post_user",form.value).then((res) => {
+    if(dialogType.value == "add"){
+        axios.post("http://127.0.0.1:8080/post_user",form.value).then((res)=>{
             console.log("添加用户成功:", res.data);
+            getuser();
         }).catch((err) => {
             ElMessageBox.confirm("添加用户失败，请联系后台管理人员", "警告", {
                 confirmButtonText: "确定",
@@ -70,12 +97,18 @@ function subUser() {
                 console.error("添加用户失败:", err);
             });
         });
-        userList.value.push(form.value);
     } else {
-        userList.value.forEach((item, index) => {
-            if (item.username == form.value.username) {
-                userList.value[index] = form.value;
-            }
+        axios.put("http://127.0.0.1:8080/put_user", form.value).then((res) => {
+            console.log("修改用户成功:", res.data);
+            getuser();
+        }).catch((err) => {
+            ElMessageBox.confirm("修改用户失败，请联系后台管理人员", "警告", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "error",
+            }).then(() => {
+                console.error("修改用户失败:", err);
+            });
         });
     }
 }
