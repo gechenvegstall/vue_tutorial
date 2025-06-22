@@ -12,6 +12,8 @@ export const useUserStore = defineStore('user', () => {
   // 存储用户信息
   function setUser(newUser) {
     user.value = newUser
+    // 存储用户到本地
+  localStorage.setItem('user', JSON.stringify(user.value))
   }
 // 取用户信息
   function getUser() {
@@ -20,7 +22,18 @@ export const useUserStore = defineStore('user', () => {
 // 清除用户信息
   function clearUser() {
     user.value = {}
+    // 清除本地存储的用户信息
+    localStorage.removeItem('user')
   }
+
+// 从本地存储中获取用户信息
+function inituser(){
+  const userData = localStorage.getItem('user')
+  if (userData){
+    user.value = JSON.parse(userData)
+  }
+}
+inituser()
 
   return {
     user,
@@ -28,5 +41,6 @@ export const useUserStore = defineStore('user', () => {
     setUser,
     getUser,
     clearUser
+    ,inituser
   }
 })
