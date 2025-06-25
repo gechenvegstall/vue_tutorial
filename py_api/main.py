@@ -109,6 +109,7 @@ async def post_user(put_u:put_user):
         conn.close()
         logging.info("关闭数据库")
 
+
 # 验证登录
 @app.post("/login")
 async def login(user_data:Login):
@@ -131,28 +132,6 @@ async def login(user_data:Login):
     finally:
         conn.close()
         logging.info("关闭数据库")
-# 订单数据数据结构
-class table(BaseModel):
-    goods:str
-    address:str
-    state:str
-# 查询订单表
-@app.get("/tables")
-async def get_table():
-    conn=db_sql()
-    try:
-        with conn.cursor() as cursor:
-            cursor.execute("select * from ordertable;")
-            tables=cursor.fetchall()
-            return tables
-            logging.info("查询成功")
-    except Exception as e:
-        logging.error("查询订单表失败")
-    finally:
-        conn.close()
-        logging.info("关闭查询订单表")
-
-
 
 
 if __name__ == "__main__":

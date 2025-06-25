@@ -16,7 +16,7 @@ const getuser=async()=>{
     try{
             await axios.get("http://127.0.0.1:8080/users").then((res) => {
             userList.value = res.data;
-            console.log("获取后端数据",userList.value);
+            // console.log("获取后端数据",userList.value);
         })
     } catch(err){
         console.error("获取用户列表失败:", err);
@@ -67,7 +67,7 @@ function deleteUser(row) {
     })
     .then((res) => {
         // 删除请求成功返回
-        console.log("删除用户成功:", res.data);
+        // console.log("删除用户成功:", res.data);
         getuser(); // 刷新用户列表
     })
     .catch((err) => {
@@ -86,7 +86,7 @@ function subUser(){
     dialogVisible.value = false;
     if(dialogType.value == "add"){
         axios.post("http://127.0.0.1:8080/post_user",form.value).then((res)=>{
-            console.log("添加用户成功:", res.data);
+            // console.log("添加用户成功:", res.data);
             getuser();
         }).catch((err) => {
             ElMessageBox.confirm("添加用户失败，请联系后台管理人员", "警告", {
@@ -99,7 +99,7 @@ function subUser(){
         });
     } else {
         axios.put("http://127.0.0.1:8080/put_user", form.value).then((res) => {
-            console.log("修改用户成功:", res.data);
+            // console.log("修改用户成功:", res.data);
             getuser();
         }).catch((err) => {
             ElMessageBox.confirm("修改用户失败，请联系后台管理人员", "警告", {
