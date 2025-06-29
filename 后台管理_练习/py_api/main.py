@@ -1,4 +1,7 @@
 import logging
+from datetime import datetime
+from os import times
+
 from pydantic import BaseModel
 from db import db_sql
 from fastapi import FastAPI,HTTPException
@@ -136,6 +139,13 @@ class table(BaseModel):
     goods:str
     address:str
     state:str
+# 删除用户数据结构
+class del_table(BaseModel):
+    goods:str
+# 更新用户数据结构
+class put_table(BaseModel):
+    state:str
+    gooda:str
 # 查询订单表
 @app.get("/tables")
 async def get_table():
@@ -151,14 +161,61 @@ async def get_table():
     finally:
         conn.close()
         logging.info("关闭查询订单表")
+# 添加订单
+@app.post("/post_tables")
+async def post_table(tables:table):
+    times=datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    conn=db_sql()
+    try:
+        with conn.cursor() as cursor:
+            sql="insert into ordertable values (%s,%s,%s,%s) "
+            cursor.execute(sql,(times,tables.goods,tables.address,tables.state))
+            conn.commit()
+            logging.info('添加订单成功')
+    except Exception as e:
+        logging.error(f'添加失败{e}')
+    finally:
+        conn.close()
+        logging.info("关闭数据库")
 
+# 删除订单
+@app.delete("/delete_table")
+async def del_table(del_tables:del_table):
+    conn=db_sql()
+    try:
+        with conn.cursor() as cursor:
+            sql="delete from ordertable where goods=%s"
+            cursor.execute(sql,(del_tables.goods))
+            conn.commit()
+            logging.info(f"删除用户{del_tables.goods}")
+    except Exception as e:
+        logging.error(f'删除失败{e}')
+    finally:
+        conn.close()
+        logging.info('关闭数据库')
 
-
+# 更新订单
+@app.post("/put_table")
+async def put_table(put_table:put_table):
+    conn=db_sql()
+    try:
+        with conn.cursor() as cursor:
+            sql="update ordertable set state=%s where goods=%s"
+            cursor.execute(sql,(put_table.state,put_table.state))
+            conn.commit()
+            logging.info(f"更新用户{put_table.gooda}")
+    except Exception as e:
+        logging.error(f"更新失败{e}")
+    finally:
+        conn.close()
+        logging.info("关闭数据库")
 
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="127.0.0.1",
         port=8080,
-        reload=True
+        reload=True,
+        reload_dirs=["."],
+        reload_delay=1
     )
