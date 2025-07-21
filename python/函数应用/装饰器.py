@@ -1,3 +1,4 @@
+"""装饰器是“用一个函数装饰另外一个函数并为其提供额外的能力”的语法现象"""
 # def my_decorator(func):
 #     def wrapper():
 #         print("函数执行前")
