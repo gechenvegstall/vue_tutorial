@@ -1,58 +1,57 @@
+import time
 import uvicorn
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI,HTTPException,status,Depends
+from fastapi.middleware.cors import CORSMiddleware
 from db import sql_db
-from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
+import secrets
+import jwt
+import schemas
+from fastapi.responses import JSONResponse
+
+# 导入子路由
+from user import router as users_router
 
 app=FastAPI()
-
-# JWT配置
-SECRET_KEY=''
-ALGORITHM='HS256'
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-# 定义数据模型
-class User(BaseModel):
-    id:None
-    username:str
-    password:str
-    phone:str
-    email:str
-    time:None
-    role:str
-class Login(BaseModel):
-    username:str
-    password:str
+app.include_router(users_router,prefix="/api/v1")
+# 跨域
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
 async def hello():
     return {'message':"hello11!!"}
-@app.post("/adduser",summary="注册用户")
-async def AddUser():
 
-@app.get('/user',summary='查询用户接口')
-async def read_user():
+# 登录验证
+secret_key = secrets.token_urlsafe(32)
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES =60*60*24*30
+@app.post('/token')
+async def token(form:schemas.Login):
     conn=sql_db()
     try:
         with conn.cursor() as cursor:
-            sql="select * from user;"
-            cursor.execute(sql)
-            user=cursor.fetchall()
-            return user
+            sql="select username,password from user where username=%s and password=%s;"
+            cursor.execute(sql,(form.username,form.password))
+            user=cursor.fetchone()
+            if not user:
+                return JSONResponse(content={"success":False,"message":"用户名或密码错误"},status_code=401)
+            if form.password != user['password']:
+                return JSONResponse(content={"success":False,"message":"用户名或密码错误"},status_code=401)
+            payload={"user":user['username'],"exp":int(time.time())+ACCESS_TOKEN_EXPIRE_MINUTES}
+            token=jwt.encode(payload,secret_key,algorithm=ALGORITHM)
+            return JSONResponse(content={"success":True,"token":token,'user':user['username']})
     except Exception as e:
-        print(f"操作错误{e}")
+        print(f"错误{e}")
+        return JSONResponse(
+            content={"success": False, "message": "系统错误"},
+            status_code=500
+        )
 
-@app.post("/login",summary="登录验证接口")
-async def login(login:Login):
-    conn=sql_db()
-    try:
-        with conn.cursor() as cursor:
-            sql="select * from user where username=%s and password=%s;"
-            cursor.execute(sql,(login.username,login.password))
-            # LoginUser=cursor.fetchall()
-            return login.username
-    except Exception as e:
-        print(f"{e}")
 
 
 
