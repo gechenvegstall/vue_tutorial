@@ -46,9 +46,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
+import { useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
+import request from '../utils/request'
 const centerDialogVisible = ref(false)
+const router = useRouter()
 onMounted(async () => {
     // 获取用户列表
     await getuser();
@@ -56,15 +58,17 @@ onMounted(async () => {
 let user=ref([])
 const getuser=async()=>{
     try{
-        await axios.get("http://127.0.0.1:8000/api/v1/users").then((response)=>{
+        await request.get("/api/v1/users").then((response)=>{
             user.value=response.data
-            console.log(response.data);
+            // console.log(response.data);
         })
     }catch(error){
-        ElMessageBox.confirm('获取用户信息失败，请稍后重试。', '错误', {
+        ElMessageBox.confirm('获取用户信息失败，请刷新页面或重新登陆。', '错误', {
             confirmButtonText: '确定',
             type: 'error'
         });
+        localStorage.removeItem("token");
+        router.push("/login");
     }
 }
 const upuser=ref({})

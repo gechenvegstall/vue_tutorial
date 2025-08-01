@@ -27,9 +27,10 @@ async def hello():
     return {'message':"hello11!!"}
 
 # 登录验证
-secret_key = secrets.token_urlsafe(32)
+secret_key = 'pmiqgtNFFVagSB7DZPPoir7Hb7g25qH1eSiou5fqP5s'
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES =60*60*24*30
+print(secret_key)
 @app.post('/token')
 async def token(form:schemas.Login):
     conn=sql_db()

@@ -1,20 +1,14 @@
 import { ElMessage } from 'element-plus';
-import { pa } from 'element-plus/es/locales.mjs';
 import {createRouter, createWebHistory} from 'vue-router'
 
 const routes=[
     {
-        path:"/",
-        name:'app',
-        component: () => import('../App.vue')
-    },
-    {
-        path:'/home',
+        path:'/',
         name:'Home',
         component: () => import('../views/home.vue')
     },
     {
-        path:'/Login',
+        path:'/login',
         name:'Login',
         component: () => import('../views/Login.vue')
 

@@ -64,7 +64,7 @@ const login=()=>{
                     ElMessage.success("登录成功")
                     localStorage.setItem("token", data.token);
                     localStorage.setItem("user", data.user);
-                    router.push("/home");
+                    router.push("/");
                     // console.log(data);
                 }else{
                     ElMessage.error(data.message||"登录失败")
