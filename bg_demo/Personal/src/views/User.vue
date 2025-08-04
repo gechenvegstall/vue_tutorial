@@ -38,7 +38,7 @@
         <template #footer>
         <div class="dialog-footer">
             <el-button @click="centerDialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="centerDialogVisible = false">确定</el-button>
+            <el-button type="primary" @click="handleUpdate">确定</el-button>
         </div>
         </template>
     </el-dialog>
@@ -47,7 +47,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import request from '../utils/request'
 const centerDialogVisible = ref(false)
 const router = useRouter()
@@ -75,13 +75,47 @@ const upuser=ref({})
 function handleEdit(row){
     centerDialogVisible.value = true;
     upuser.value = { ...row }; // 深拷贝，避免直接修改原数据
+    delete upuser.value.time;
+}
+function handleUpdate(){ 
+    centerDialogVisible.value = false;
+        try{
+        request.post("api/v1/up_user",upuser.value).then((response)=>{
+            if(response.data.success){
+                ElMessage.success("修改成功")
+                getuser()
+            }else{
+                ElMessage.error(response.data.message||"修改失败")
+                localStorage.removeItem("token");
+                router.push("/login");
+            }
+        })
+    }catch(error){
+        ElMessage.error("修改失败")
+    }
 }
 function handleDelete(row){
     ElMessageBox.confirm(`确定删除用户 ${row.username} 吗？`, '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
+    }).then(()=>{
+        try{
+            request.delete("api/v1/del_user", { params: { user_id: row.id } }).then((response)=>{
+                if(response.data.success){
+                    ElMessage.success("删除成功")
+                    getuser()
+                }else{
+                    ElMessage.error(response.data.message||"删除失败")
+                    localStorage.removeItem("token");
+                    router.push("/login");
+                }
+            })
+        }catch(error){
+            ElMessage.error("删除失败")
+        }
     })
+
 }
 </script>
 

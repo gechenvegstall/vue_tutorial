@@ -15,3 +15,11 @@ class User(BaseModel):
 class Login(BaseModel):
     username:str
     password:str
+
+# 更新用户数据
+class users(BaseModel):
+    id:Optional[int]=None
+    username:str
+    password:str
+    phone:str
+    emali:str

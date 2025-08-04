@@ -10,9 +10,11 @@ from fastapi.responses import JSONResponse
 
 # 导入子路由
 from user import router as users_router
+from articlelist import router as article_router
 
 app=FastAPI()
 app.include_router(users_router,prefix="/api/v1")
+app.include_router(article_router,prefix="/api/article")
 # 跨域
 app.add_middleware(
     CORSMiddleware,

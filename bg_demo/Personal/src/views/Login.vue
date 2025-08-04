@@ -97,10 +97,10 @@ const logout = () => {
     router.push('/Login');
 };
 const register=()=>{
-    ElMessage.error("注册功能尚未实现")
+    ElMessage.error("注册功能尚未实现,有需要请联系管理员")
 }
 const forget=()=>{
-    ElMessage.error("忘记密码功能尚未实现")
+    ElMessage.error("忘记密码功能尚未实现,有需要请联系管理员")
 }
 
 </script>

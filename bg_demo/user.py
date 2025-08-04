@@ -4,6 +4,8 @@ import jwt
 from fastapi.security import OAuth2PasswordBearer
 from db import sql_db
 import schemas
+from schemas import users
+from fastapi.responses import JSONResponse
 
 
 router=APIRouter()
@@ -41,3 +43,28 @@ async def read_user(is_valid:bool=Depends(verify_token_expiration)):
             return user
     except Exception as e:
         print(f"操作错误{e}")
+
+@router.post("/up_user")
+async def updata(upuser:users,is_valid:bool=Depends(verify_token_expiration)):
+    conn=sql_db()
+    try:
+        with conn.cursor() as cursor:
+            sql='update user set username=%s,password=%s,phone=%s,emali=%s where id=%s;'
+            cursor.execute(sql,(upuser.username,upuser.password,upuser.phone,upuser.emali,upuser.id))
+            conn.commit()
+            return JSONResponse(content={"success": True, "message": "修改成功"}, status_code=200)
+    except Exception as e:
+        print(f"错误{e}")
+
+@router.delete("/del_user")
+async def deldata(user_id:int,is_valid:bool=Depends(verify_token_expiration)):
+    conn=sql_db()
+    try:
+        with conn.cursor() as cursor:
+            sql="delete from user where id=%s;"
+            cursor.execute(sql,(user_id))
+            conn.commit()
+            return JSONResponse(content={'success':True},status_code=200)
+    except Exception as e:
+        print(f"错误{e}")
+

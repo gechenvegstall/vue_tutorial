@@ -14,7 +14,7 @@ const routes=[
 
     },
     {
-        path:'/lookarticle',
+        path:'/lookarticle/:id',
         name:'LookArticle',
         component: () => import('../views/LookArticle.vue')
     },
