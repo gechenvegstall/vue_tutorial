@@ -10,7 +10,7 @@
           <nav>
             <ul>
               <li><router-link to="/" class="nav-link">主页</router-link></li>
-              <li><router-link to="{name:LookArticle}" class="nav-link">文章浏览</router-link></li>
+              <li><router-link to="/lookarticle/:id" class="nav-link">文章浏览</router-link></li>
               <li><router-link to="/lssuearticle" class="nav-link">文章发布</router-link></li>
               <li><router-link to="/managearticle" class="nav-link">文章管理</router-link></li>
               <li><router-link to="/user" class="nav-link">用户管理</router-link></li>

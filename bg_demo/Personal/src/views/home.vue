@@ -17,19 +17,19 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue';
+import { ref,onMounted} from 'vue';
 import { ElCarousel, ElCarouselItem, ElCard } from 'element-plus';
 import request from '../utils/request'
 const imgdata=[
-    {id:1,src:new URL('../assets/images/5.jpg', import.meta.url)},
-    {id:2,src:new URL('../assets/images/1.jpg', import.meta.url)},
-    {id:3,src:new URL('../assets/images/2.jpg', import.meta.url)},
-    {id:4,src:new URL('../assets/images/4.png', import.meta.url)},
+    {id:1,src:new URL('../assets/images/5.jpg', import.meta.url).href},
+    {id:2,src:new URL('../assets/images/1.jpg', import.meta.url).href},
+    {id:3,src:new URL('../assets/images/2.jpg', import.meta.url).href},
+    {id:4,src:new URL('../assets/images/4.png', import.meta.url).href},
 ]
 
 const ardata=ref([]);
 request.get('/api/article/list').then((res)=>{
-    console.log(res.data)
+    // console.log(res.data)
     ardata.value=res.data
 })
 </script>

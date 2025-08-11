@@ -58,7 +58,7 @@ const loginForm = ref(null);
 const login=()=>{
     loginForm.value.validate((valid)=>{
         if(valid){
-            axios.post("http://127.0.0.1:8000/token", UserForm).then((response)=>{
+            axios.post("http://8.134.127.43:8000/token", UserForm).then((response)=>{
                 const data=response.data;
                 if(data.success){
                     ElMessage.success("登录成功")
