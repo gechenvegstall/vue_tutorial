@@ -1,3 +1,4 @@
+import datetime
 import time
 import uvicorn
 from fastapi import FastAPI,HTTPException,status,Depends
@@ -56,6 +57,26 @@ async def token(form:schemas.Login):
             content={"success": False, "message": "系统错误"},
             status_code=500
         )
+
+# 注册用户
+@app.post("/into_user")
+def into_user(into:schemas.User):
+    conn=sql_db()
+    try:
+        with conn.cursor() as cursor:
+            sql="select username from user where username=%s;"
+            cursor.execute(sql,(into.username,))
+            user=cursor.fetchall()
+            if user:
+                return JSONResponse(content={"success": False, "message": "用户存在"}, status_code=400)
+            else:
+                sql="insert into user values (%s,%s,%s,%s,%s,%s,%s);"
+                cursor.execute(sql,(into.id,into.username,into.password,into.phone,into.email,into.time,into.role))
+                conn.commit()
+                return True
+    except Exception as e:
+        print(f"错误{e}")
+
 
 
 

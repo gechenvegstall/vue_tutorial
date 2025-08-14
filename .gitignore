@@ -1,0 +1,34 @@
+# 隔离不需要的文件
+
+# 实现登录
+实现登录/.idea/
+实现登录/login_v/.vscode/
+实现登录/登录/__pycache__/
+实现登录/登录/Lib/
+实现登录/登录/Scripts/
+实现登录/登录/pyvenv.cfg
+
+# 后台管理练习
+后台管理练习/.vscode/
+后台管理练习/py_api/__pycache__/
+
+# FastAPI
+FastAPI/.idea/
+FastAPI/__pycache__/
+FastAPI/studen_vue/.vscode/
+
+# electron-vite
+electron-vite/.vscode/
+electron-vite/dist-electron/
+
+# python
+python/.idea/
+
+# python权限管理
+python权限管理/.idea/
+python权限管理/__pycache__/
+
+# bg_demo
+bg_demo/myblog/__pycache__/
+bg_demo/Personal/.vscode/
+bg_demo/Personal/node_modules/
