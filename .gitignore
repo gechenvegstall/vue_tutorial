@@ -23,6 +23,14 @@ electron-vite/dist-electron/
 
 # python
 python/.idea/
+python/django_vote/.idea/
+python/django_vote/vote_venv/
+python/django_vote/polls/__pycache__/
+python/django_vote/vote/__pycache__/
+python/hello_django/.idea/
+python/hello_django/firstapp/__pycache__/
+python/hello_django/hello_django/__pycache__/
+
 
 # python权限管理
 python权限管理/.idea/
