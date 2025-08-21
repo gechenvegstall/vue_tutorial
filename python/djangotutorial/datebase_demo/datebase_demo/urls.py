@@ -1,5 +1,5 @@
 """
-URL configuration for django_templase_demo project.
+URL configuration for datebase_demo project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -15,15 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 
-from home import views
+from book import views
+from article import urls
+from orm_demo import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",views.index),
-    path("temp",views.info),
-    path('if',views.if_view),
-    path('for',views.for_view),
-    path('with',views.with_view)
+    path('book_add',views.add_book),
+    path('read_book',views.read_book),
+    path('put_book',views.update_book),
+    path('del_book',views.del_book),
+    path('article/',include('article.urls')),
+    path('orm/',include('orm_demo.urls'))
+
 ]
