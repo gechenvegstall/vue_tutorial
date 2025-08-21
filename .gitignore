@@ -3,6 +3,7 @@
 **/.idea/
 **/Lib/
 **/.vscode/
+**/0001_initial.py
 
 # 实现登录
 实现登录/登录/Scripts/
