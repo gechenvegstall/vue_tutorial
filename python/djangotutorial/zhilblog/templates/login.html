@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
 
-{% block title%}博客首页{% endblock %}
+{% block title%}博客登录{% endblock %}
 
 {% block main %}
 <div style="max-width:330px" class="m-auto">
         <h1>登录</h1>
         <form action="" method="post">
+            {% csrf_token %}
             <div class="mb-3">
                 <label>邮箱</label>
                 <input type="email" name="email" class="form-control" placeholder="邮箱">
