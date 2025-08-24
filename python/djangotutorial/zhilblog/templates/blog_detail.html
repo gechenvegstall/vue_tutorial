@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 
 
-{% block title%}博客首页{% endblock %}
+{% block title%}博客文章详情{% endblock %}
 
 {% block main %}
-<h1>Django实战</h1>
+<h1>{{blog.title}}</h1>
     <hr>
     <div class="mt-2">
         <img src="{% static 'image/avatar.webp' %}" alt="" height="30" width="30" class="rounded-circle" >
-        <span class="mt-2">xxx</span>
+        <span class="mt-2">{{blog.author.username}}</span>
         <span class="mt-2">于</span>
-        <span class="mt-2">2020.2.2 11：11</span>发布
+        <span class="mt-2">{{blog.pub_time|date:"Y年m月d日 h时i分"}}</span>发布
     </div>
     <hr>
     <div class="py-2">
-        这是博客详情
+        {{blog.content|safe}}
     </div>
     <hr>
     <div class="mt-2">
