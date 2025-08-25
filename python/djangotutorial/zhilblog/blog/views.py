@@ -1,8 +1,8 @@
-from django.shortcuts import render,HttpResponse,reverse
+from django.shortcuts import render,redirect,reverse
 from django.http.response import JsonResponse
 from django.urls.base import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
 from .models import Blog,BlogComment,BlogCategory
 from .forms import PubBlogForm
 from django.db.models import Q
@@ -36,3 +36,12 @@ def pub_blog(request):
         else:
             print(form.errors)
             return JsonResponse({'code': 400, "message": "参数错误！"})
+
+@require_POST
+@login_required()
+def pub_comment(request):
+    blog_id = request.POST.get('blog_id')
+    content = request.POST.get('content')
+    BlogComment.objects.create(content=content, blog_id=blog_id, author=request.user)
+    # 重新加载博客详情页
+    return redirect(reverse("blog:blog_detail", kwargs={'blog_id': blog_id}))

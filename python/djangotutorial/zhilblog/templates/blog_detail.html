@@ -18,43 +18,34 @@
     </div>
     <hr>
     <div class="mt-2">
-        <h3>评论</h3>
-        <form action="" method="post">
+        <h3>评论{{blog.comments.all|length}}</h3>
+        <form action="{% url 'blog:pub_comment' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="blog_id" value="{{blog.id}}">
             <div class="mt-2">
-                <input type="text" class="form-control" placeholder="请输入评论">
+                <input type="text" class="form-control" placeholder="请输入评论" name="content">
             </div>
             <div class="text-end mt-2">
-                <button type="button" class="btn btn-primary">评论</button>
+                <button type="submit" class="btn btn-primary">评论</button>
             </div>
         </form>
     </div>
     <div class="mt-2">
         <ul class="list-group list-group-flush">
-            <li class="list-group-item mb-3">
-                <div class="d-flex justify-content-between" >
-                    <div class="user-info">
-                        <img src="{% static 'image/avatar.webp' %}" alt="" height="30" width="30" class="rounded-circle" >
-                        <span>xxx</span>
+            {% for comment in blog.comments.all %}
+                <li class="list-group-item mb-3">
+                    <div class="d-flex justify-content-between" >
+                        <div class="user-info">
+                            <img src="{% static 'image/avatar.webp' %}" alt="" height="30" width="30" class="rounded-circle" >
+                            <span>{{comment.author.username}}</span>
+                        </div>
+                        <div class="create-time" style="line-height:30px" >{{comment.put_time|date:'Y年m月d日 h时i分'}}</div>
                     </div>
-                    <div class="create-time" style="line-height:30px" >2020.2.2 11：22</div>
-                </div>
-                <div class="mt-2">
-                    这是评论内容
-                </div>
-            </li>
-            <li class="list-group-item mb-3">
-                <div class="d-flex justify-content-between">
-                    <div class="user-info">
-                        <img src="{% static 'image/avatar.webp' %}" alt="" height="30" width="30"
-                             class="rounded-circle">
-                        <span>xxx</span>
+                    <div class="mt-2">
+                        {{comment.content}}
                     </div>
-                    <div class="create-time" style="line-height:30px">2020.2.2 1122</div>
-                </div>
-                <div class="mt-2">
-                    这是评论内容
-                </div>
-            </li>
+                </li>
+            {% endfor %}
         </ul>
     </div>
 {% endblock %}
